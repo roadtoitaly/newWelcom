@@ -1,6 +1,6 @@
 /* ================== CONFIG ================== */
 // Paste your Google Apps Script Web App URL here (see apps-script.gs for the setup steps)
-const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxNLP8SVXIc1k1Gfa1q0n6tbzM5bd76WedkgOu-uqfZCCW4cIuZ_Ps_wNxvGnmX5lfl/exec';
+const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziVO3kFjPy4kww21Fwdo5DypjxLh3ZYEJoK1G7qGgw9TaIKy9T_OtXo8vnp-tcKjZO/exec';
 const WA_NUMBER = '201027058317';
 
 /* ================== Send lead to Google Sheet ================== */
