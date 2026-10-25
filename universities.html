@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Italian Public Universities | Road to Italy</title>
+    <meta name="description" content="Complete guide to Italian public universities: overview, features, bachelor's and master's programs.">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: {
+            colors: { forest: '#11221c', cream: '#f9f6f0', it_red: '#ce2b37', it_green: '#009246', gold: '#d4af37' },
+            fontFamily: { playfair: ['"Playfair Display"', 'serif'], montserrat: ['"Montserrat"', 'sans-serif'], dancing: ['"Dancing Script"', 'cursive'] }
+        } } }
+    </script>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body class="font-montserrat antialiased selection:bg-gold selection:text-forest">
+    <div class="noise-bg"></div>
+
+    <div class="fixed top-0 left-0 w-full h-1 flex opacity-90 z-50">
+        <div class="h-full w-1/3 bg-it_green"></div><div class="h-full w-1/3 bg-white"></div><div class="h-full w-1/3 bg-it_red"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="site-nav scrolled">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="font-playfair text-xl font-bold text-cream">Road to <span class="text-gold">Italy</span></a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html#services" class="nav-link">Services</a>
+                <a href="index.html#universities" class="nav-link">Top Universities</a>
+                <a href="universities.html" class="nav-link active-link">All Universities</a>
+                <a href="index.html#contact" class="nav-link">Contact</a>
+                <button onclick="openModal('register-modal')" class="bg-it_red hover:bg-[#b0222e] text-white text-sm font-bold px-5 py-2 rounded-full transition-colors cursor-pointer">Register Now</button>
+            </div>
+            <button id="burger" class="md:hidden text-cream text-2xl cursor-pointer" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-[#0d1f19]/95 backdrop-blur-md border-t border-cream/10 px-6 py-5 space-y-4">
+            <a href="index.html" class="block text-cream/90">Home</a>
+            <a href="index.html#services" class="block text-cream/90">Services</a>
+            <a href="index.html#universities" class="block text-cream/90">Top Universities</a>
+            <a href="universities.html" class="block text-gold">All Universities</a>
+            <a href="index.html#contact" class="block text-cream/90">Contact</a>
+            <button onclick="openModal('register-modal')" class="w-full bg-it_red text-white font-bold py-3 rounded-full cursor-pointer">Register Now</button>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <header class="pt-36 pb-14 px-6 text-center relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-it_green/10 via-transparent to-transparent pointer-events-none"></div>
+        <p class="text-gold uppercase tracking-[.3em] text-xs mb-3 reveal active relative">Public Universities Guide</p>
+        <h1 class="font-playfair text-4xl md:text-6xl font-bold mb-5 reveal active relative">Study at Italy's Best<br><span class="text-gold">Public Universities</span></h1>
+        <p class="text-cream/70 max-w-2xl mx-auto leading-relaxed reveal active relative">Explore <span id="total-count" class="text-cream font-semibold">40+</span> universities. Open any card to see the overview, key advantages and the bachelor's and master's programs.</p>
+
+        <div class="flex items-center justify-center mt-8 w-40 h-1.5 mx-auto rounded-full overflow-hidden">
+            <div class="h-full w-1/3 bg-it_green"></div><div class="h-full w-1/3 bg-white"></div><div class="h-full w-1/3 bg-it_red"></div>
+        </div>
+    </header>
+
+    <!-- FILTERS -->
+    <section class="px-6 pb-10">
+        <div class="max-w-7xl mx-auto glass rounded-2xl p-5 md:p-6 flex flex-col lg:flex-row gap-5 lg:items-center lg:justify-between">
+            <div class="relative w-full lg:max-w-md">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-cream/40"></i>
+                <input id="search" type="text" placeholder="Search by university, city or program (e.g. AI, Milan)..." class="form-input !pl-11">
+            </div>
+            <div class="flex flex-wrap gap-2" id="filters">
+                <button class="filter-btn on" data-region="all">All</button>
+                <button class="filter-btn" data-region="north">Northern Italy</button>
+                <button class="filter-btn" data-region="central">Central Italy</button>
+                <button class="filter-btn" data-region="south">South &amp; Islands</button>
+            </div>
+        </div>
+        <p id="result-info" class="max-w-7xl mx-auto mt-4 text-sm text-cream/50"></p>
+    </section>
+
+    <!-- GRID -->
+    <main class="px-6 pb-24">
+        <div id="uni-grid" class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+        <div id="empty" class="hidden max-w-md mx-auto text-center py-20">
+            <i class="fa-regular fa-face-frown text-5xl text-cream/30 mb-4"></i>
+            <p class="text-cream/70">No universities match your search. Try another keyword.</p>
+        </div>
+    </main>
+
+    <!-- BANNER CTA -->
+    <section class="px-6 pb-24">
+        <div class="max-w-4xl mx-auto glass rounded-3xl p-10 text-center border-t border-it_red/30">
+            <h2 class="font-playfair text-3xl font-bold mb-3">Not sure which university fits you?</h2>
+            <p class="text-cream/70 mb-7 text-sm">Send us your grades and interests and we'll recommend the best matches — for free.</p>
+            <button onclick="openModal('register-modal')" class="btn-red-glow bg-it_red hover:bg-[#b0222e] text-white font-bold py-4 px-10 rounded-full transition-all hover:-translate-y-1 cursor-pointer">Get Free Consultation <i class="fa-solid fa-arrow-right ml-2"></i></button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-cream/10 pt-16 pb-8 bg-[#0d1f19]" id="contact">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <div>
+                <h2 class="font-playfair text-2xl font-bold text-cream mb-4">Road to Italy</h2>
+                <p class="text-sm text-cream/60 leading-relaxed mb-6">Your trusted partner for educational consultancy, university admissions, and visa guidance for Italy.</p>
+                <div class="flex gap-4">
+                    <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-cream/5 flex items-center justify-center hover:bg-it_red hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-cream/5 flex items-center justify-center hover:bg-it_red hover:text-white transition-colors"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-cream/5 flex items-center justify-center hover:bg-it_red hover:text-white transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4 text-gold">Quick Links</h3>
+                <ul class="space-y-3 text-sm text-cream/70">
+                    <li><a href="index.html" class="hover:text-cream transition-colors">Home</a></li>
+                    <li><a href="index.html#services" class="hover:text-cream transition-colors">Our Services</a></li>
+                    <li><a href="universities.html" class="hover:text-cream transition-colors">Universities</a></li>
+                    <li><a href="#" class="hover:text-cream transition-colors">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4 text-gold">Contact Us</h3>
+                <ul class="space-y-4 text-sm text-cream/70">
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-location-dot mt-1 text-it_red"></i><span>Sheikh Zayed, Egypt</span></li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-envelope text-it_red"></i><a href="mailto:yossefabdelkarem9@gmail.com" class="hover:text-cream transition-colors">yossefabdelkarem9@gmail.com</a></li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-it_red"></i><a href="tel:+201027058317" dir="ltr" class="hover:text-cream transition-colors">+20 102 705 8317</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center pt-8 border-t border-cream/10 text-xs text-cream/40">&copy; 2026 Road to Italy. All rights reserved.</div>
+    </footer>
+
+    <a href="https://wa.me/201027058317" target="_blank" rel="noopener" aria-label="WhatsApp" class="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center text-3xl shadow-lg hover:scale-110 transition-transform z-40 hover:shadow-[0_0_20px_#25D366]"><i class="fa-brands fa-whatsapp"></i></a>
+
+    <!-- UNIVERSITY DETAIL MODAL -->
+    <div id="uni-modal" class="uni-modal" onclick="if(event.target===this) closeUni()">
+        <div class="panel" id="uni-panel"></div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="fixed inset-0 z-[70] flex items-center justify-center px-4 bg-forest/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-cream text-forest w-full max-w-md rounded-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 relative" id="modal-content">
+            <div class="relative bg-it_red text-white p-6 text-center">
+                <button onclick="closeModal('register-modal')" aria-label="Close" class="absolute top-4 right-4 text-white/70 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="font-playfair text-2xl font-bold">Start Your Registration</h3>
+                <p class="text-sm mt-1 text-white/80">Step 1 towards your Italian degree</p>
+            </div>
+            <div class="p-8">
+                <form onsubmit="handleRegistration(event)" class="space-y-4">
+                    <input type="hidden" name="interest" id="reg-interest">
+                    <div><label class="block text-xs font-bold text-forest/70 uppercase mb-1">Full Name</label><input name="name" type="text" required class="w-full border-b-2 border-forest/20 py-2 focus:border-it_red outline-none bg-transparent transition-colors font-semibold text-forest"></div>
+                    <div><label class="block text-xs font-bold text-forest/70 uppercase mb-1">Email</label><input name="email" type="email" required class="w-full border-b-2 border-forest/20 py-2 focus:border-it_red outline-none bg-transparent transition-colors font-semibold text-forest"></div>
+                    <div><label class="block text-xs font-bold text-forest/70 uppercase mb-1">WhatsApp Number</label><input name="phone" type="tel" required class="w-full border-b-2 border-forest/20 py-2 focus:border-it_red outline-none bg-transparent transition-colors font-semibold text-forest"></div>
+                    <button type="submit" class="w-full py-4 mt-6 bg-forest text-cream rounded-xl font-bold hover:bg-it_red hover:text-white transition-colors shadow-lg cursor-pointer">Submit Application</button>
+                </form>
+                <div id="register-success" class="hidden absolute inset-0 bg-cream flex-col items-center justify-center text-center p-8 z-10">
+                    <div class="w-16 h-16 rounded-full bg-it_green/20 text-it_green flex items-center justify-center text-3xl mb-4"><i class="fa-solid fa-check"></i></div>
+                    <h3 class="font-playfair text-2xl font-bold mb-2">Welcome Aboard!</h3>
+                    <p class="text-forest/70 text-sm">We have received your details. Check your WhatsApp shortly for the next steps.</p>
+                    <button onclick="closeModal('register-modal')" class="mt-8 px-6 py-2 border border-forest text-forest rounded-lg hover:bg-forest hover:text-cream transition-colors cursor-pointer">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="universities-data.js"></script>
+    <script src="site.js"></script>
+    <script>
+        const grid = document.getElementById('uni-grid');
+        const search = document.getElementById('search');
+        let region = 'all';
+
+        document.getElementById('total-count').textContent = UNIVERSITIES.length;
+
+        function card(u, i) {
+            return `
+            <article class="uni-card reveal cursor-pointer group" style="transition-delay:${(i % 3) * 80}ms" onclick="openUni('${u.id}')">
+                <div class="relative">
+                    ${imageHTML(u)}
+                    <span class="uni-badge"><i class="fa-solid fa-location-dot"></i> ${u.city}</span>
+                    <span class="uni-year">Est. ${u.founded}</span>
+                </div>
+                <div class="p-5 flex flex-col flex-1">
+                    <span class="text-[.65rem] uppercase tracking-widest text-it_green font-bold mb-1">${REGIONS[u.region]}</span>
+                    <h3 class="font-playfair text-xl font-bold mb-1">${u.name}</h3>
+                    <p class="text-cream/50 text-xs mb-3" dir="rtl">${u.ar}</p>
+                    <p class="text-cream/70 text-sm leading-relaxed mb-4 line-clamp-3">${u.about}</p>
+                    <div class="flex flex-wrap gap-1.5 mb-4">${u.tags.slice(0, 3).map(t => `<span class="chip">${t}</span>`).join('')}</div>
+                    <div class="mt-auto flex items-center justify-between pt-4 border-t border-cream/10 text-xs text-cream/60">
+                        <span><i class="fa-solid fa-graduation-cap text-gold mr-1"></i>${u.bachelor.length} Bachelor</span>
+                        <span><i class="fa-solid fa-user-graduate text-it_red mr-1"></i>${u.master.length} Master</span>
+                        <span class="text-gold font-semibold group-hover:translate-x-1 transition-transform">Details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </article>`;
+        }
+
+        function render() {
+            const q = search.value.trim().toLowerCase();
+            const list = UNIVERSITIES.filter(u => {
+                if (region !== 'all' && u.region !== region) return false;
+                if (!q) return true;
+                const hay = [u.name, u.ar, u.city, u.about, ...u.tags, ...u.bachelor, ...u.master].join(' ').toLowerCase();
+                return hay.includes(q);
+            });
+            grid.innerHTML = list.map(card).join('');
+            observeNewReveals(grid);
+            document.getElementById('empty').classList.toggle('hidden', list.length > 0);
+            document.getElementById('result-info').textContent = `Showing ${list.length} of ${UNIVERSITIES.length} universities`;
+        }
+
+        search.addEventListener('input', render);
+        document.getElementById('filters').addEventListener('click', e => {
+            const b = e.target.closest('.filter-btn'); if (!b) return;
+            document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('on'));
+            b.classList.add('on'); region = b.dataset.region; render();
+        });
+
+        /* ---------- Detail modal ---------- */
+        function openUni(id) {
+            const u = UNIVERSITIES.find(x => x.id === id); if (!u) return;
+            const wa = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Hello Road to Italy, I am interested in studying at ' + u.name)}`;
+            document.getElementById('uni-panel').innerHTML = `
+                <div class="relative">
+                    ${imageHTML(u)}
+                    <button onclick="closeUni()" aria-label="Close" class="absolute z-10 top-4 right-4 w-10 h-10 rounded-full bg-forest/80 hover:bg-it_red text-white flex items-center justify-center transition-colors cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="absolute z-10 bottom-0 left-0 right-0 p-6 md:p-8">
+                        <span class="text-[.7rem] uppercase tracking-widest text-gold font-bold">${REGIONS[u.region]} · Est. ${u.founded}</span>
+                        <h2 class="font-playfair text-3xl md:text-4xl font-bold leading-tight">${u.name}</h2>
+                        <p class="text-cream/70 text-sm mt-1"><span dir="rtl">${u.ar}</span> · <i class="fa-solid fa-location-dot text-it_red"></i> ${u.city}</p>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8 space-y-8">
+                    <div>
+                        <h3 class="font-playfair text-xl font-bold text-gold mb-3">About</h3>
+                        <p class="text-cream/80 text-sm leading-relaxed">${u.about}</p>
+                        <div class="flex flex-wrap gap-2 mt-4">${u.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div>
+                    </div>
+                    <div>
+                        <h3 class="font-playfair text-xl font-bold text-gold mb-3">Key Advantages</h3>
+                        <ul class="feat-list">${u.features.map(f => `<li>${f}</li>`).join('')}</ul>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="glass rounded-2xl p-5">
+                            <h3 class="font-playfair text-lg font-bold mb-4"><i class="fa-solid fa-graduation-cap text-gold mr-2"></i>Bachelor's Programs</h3>
+                            <ul class="prog-list">${u.bachelor.map(p => `<li>${p}</li>`).join('')}</ul>
+                        </div>
+                        <div class="glass rounded-2xl p-5">
+                            <h3 class="font-playfair text-lg font-bold mb-4"><i class="fa-solid fa-user-graduate text-it_red mr-2"></i>Master's Programs</h3>
+                            <ul class="prog-list ms">${u.master.map(p => `<li>${p}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+                    <p class="text-xs text-cream/40"><i class="fa-solid fa-circle-info mr-1"></i>Program lists are indicative. Availability, language of instruction and deadlines change each year — we confirm the current offer for you.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button onclick="applyFor('${u.id}')" class="flex-1 btn-red-glow bg-it_red hover:bg-[#b0222e] text-white font-bold py-4 rounded-full transition-colors cursor-pointer">Apply via Road to Italy <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                        <a href="${wa}" target="_blank" rel="noopener" class="flex-1 text-center bg-[#25D366] hover:brightness-110 text-white font-bold py-4 rounded-full transition"><i class="fa-brands fa-whatsapp mr-2"></i>Ask on WhatsApp</a>
+                    </div>
+                </div>`;
+            const m = document.getElementById('uni-modal');
+            m.classList.add('open'); m.scrollTop = 0; document.body.style.overflow = 'hidden';
+            history.replaceState(null, '', '#' + id);
+        }
+        function closeUni() {
+            document.getElementById('uni-modal').classList.remove('open');
+            document.body.style.overflow = '';
+            history.replaceState(null, '', location.pathname);
+        }
+        function applyFor(id) {
+            const u = UNIVERSITIES.find(x => x.id === id);
+            closeUni(); openModal('register-modal');
+            document.getElementById('reg-interest').value = u ? u.name : '';
+        }
+
+        render();
+        if (location.hash.length > 1) openUni(location.hash.slice(1));
+        window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (id) openUni(id); });
+    </script>
+</body>
+</html>

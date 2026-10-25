@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road to Italy | Study in Italy</title>
+    <meta name="description" content="Road to Italy — complete guidance for studying in Italy: university selection, applications, Universitaly, scholarships and visa.">
+
+    <!-- Google tag (GA4) — replace G-XXXXXXXXXX with your measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                colors: { forest: '#11221c', cream: '#f9f6f0', it_red: '#ce2b37', it_green: '#009246', gold: '#d4af37' },
+                fontFamily: { playfair: ['"Playfair Display"', 'serif'], montserrat: ['"Montserrat"', 'sans-serif'], dancing: ['"Dancing Script"', 'cursive'] }
+            } }
+        }
+    </script>
+    <link rel="stylesheet" href="site.css">
+</head>
+<body class="font-montserrat antialiased selection:bg-gold selection:text-forest">
+    <div class="noise-bg"></div>
+
+    <!-- Top flag line -->
+    <div class="fixed top-0 left-0 w-full h-1 flex opacity-90 z-50">
+        <div class="h-full w-1/3 bg-it_green"></div><div class="h-full w-1/3 bg-white"></div><div class="h-full w-1/3 bg-it_red"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="site-nav">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="font-playfair text-xl font-bold text-cream">Road to <span class="text-gold">Italy</span></a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="nav-link active-link">Home</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#universities" class="nav-link">Top Universities</a>
+                <a href="universities.html" class="nav-link">All Universities</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <button onclick="openModal('register-modal')" class="bg-it_red hover:bg-[#b0222e] text-white text-sm font-bold px-5 py-2 rounded-full transition-colors cursor-pointer">Register Now</button>
+            </div>
+            <button id="burger" class="md:hidden text-cream text-2xl cursor-pointer" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-[#0d1f19]/95 backdrop-blur-md border-t border-cream/10 px-6 py-5 space-y-4">
+            <a href="index.html" class="block text-cream/90">Home</a>
+            <a href="#services" class="block text-cream/90">Services</a>
+            <a href="#universities" class="block text-cream/90">Top Universities</a>
+            <a href="universities.html" class="block text-cream/90">All Universities</a>
+            <a href="#contact" class="block text-cream/90">Contact</a>
+            <button onclick="openModal('register-modal')" class="w-full bg-it_red text-white font-bold py-3 rounded-full cursor-pointer">Register Now</button>
+        </div>
+    </nav>
+
+    <!-- 1. HERO -->
+    <header class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-16 pb-12">
+        <div class="reveal active mb-2">
+            <img src="images/logo.png" alt="Road to Italy Logo" class="logo-img">
+        </div>
+
+        <h1 class="reveal active font-dancing text-5xl md:text-7xl lg:text-8xl text-cream mb-8 leading-tight drop-shadow-lg" style="transition-delay:100ms;">
+            Studying in Italy <br>
+            <span class="text-4xl md:text-5xl text-cream/80">more than just a degree</span>
+        </h1>
+
+        <div class="reveal active flex items-center justify-center mb-10 w-48 h-1.5 rounded-full overflow-hidden shadow-lg" style="transition-delay:200ms;">
+            <div class="h-full w-1/3 bg-it_green"></div><div class="h-full w-1/3 bg-white"></div><div class="h-full w-1/3 bg-it_red"></div>
+        </div>
+
+        <div class="reveal active max-w-4xl grid md:grid-cols-2 gap-6 md:gap-10 mb-14 w-full" style="transition-delay:300ms;">
+            <div class="glass p-8 rounded-2xl">
+                <h2 class="font-playfair text-2xl md:text-3xl text-gold mb-3 font-semibold">Our Mission</h2>
+                <p class="text-cream/90 leading-relaxed font-light">Guide students through every step of studying in Italy, transforming complex procedures into a seamless journey.</p>
+            </div>
+            <div class="glass p-8 rounded-2xl">
+                <h2 class="font-playfair text-2xl md:text-3xl text-gold mb-3 font-semibold">Our Vision</h2>
+                <p class="text-cream/90 leading-relaxed font-light">To become the first trusted destination for Arab students who dream of studying in Italy and building a global future.</p>
+            </div>
+        </div>
+
+        <div class="reveal active flex flex-col sm:flex-row gap-4 items-center relative z-20 mb-8" style="transition-delay:400ms;">
+            <button onclick="openModal('register-modal')" class="btn-red-glow bg-it_red hover:bg-[#b0222e] font-bold text-lg py-4 px-12 rounded-full transition-all duration-300 hover:-translate-y-1 inline-flex items-center gap-3 text-white cursor-pointer">
+                Register Now <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <a href="universities.html" class="font-semibold text-cream border border-cream/30 hover:border-gold hover:text-gold py-4 px-10 rounded-full transition-colors inline-flex items-center gap-3">
+                Browse Universities <i class="fa-solid fa-building-columns"></i>
+            </a>
+        </div>
+
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce text-cream/50 z-10"><i class="fa-solid fa-chevron-down text-xl"></i></div>
+    </header>
+
+    <!-- 2. STATS -->
+    <section class="py-16 border-y border-cream/10 bg-forest/50">
+        <div class="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 text-center">
+            <div class="reveal flex flex-col items-center">
+                <span class="font-playfair text-5xl md:text-6xl text-gold font-bold mb-2"><span class="counter" data-target="50">0</span>+</span>
+                <span class="text-cream/70 uppercase tracking-widest text-sm">Accepted Students</span>
+            </div>
+            <div class="reveal flex flex-col items-center" style="transition-delay:150ms;">
+                <span class="font-playfair text-5xl md:text-6xl text-gold font-bold mb-2"><span class="counter" data-target="98">0</span>%</span>
+                <span class="text-cream/70 uppercase tracking-widest text-sm">Visa Success Rate</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SERVICES -->
+    <section class="py-24 px-6 max-w-7xl mx-auto" id="services">
+        <div class="text-center mb-16 reveal">
+            <h2 class="font-playfair text-4xl md:text-5xl font-bold mb-4">Our Services</h2>
+            <p class="text-cream/60 max-w-2xl mx-auto">Comprehensive support tailored for your educational journey to Italy.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="reveal glass p-8 rounded-2xl hover:bg-cream/5 transition-colors group">
+                <i class="fa-solid fa-user-tie text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                <h3 class="font-playfair text-xl font-semibold mb-3">Consultation &amp; Major Selection</h3>
+                <p class="text-cream/70 text-sm leading-relaxed">Personalized sessions to discover the perfect university program and major that aligns with your academic background and career goals.</p>
+            </div>
+            <div class="reveal glass p-8 rounded-2xl hover:bg-cream/5 transition-colors group" style="transition-delay:100ms;">
+                <i class="fa-solid fa-file-lines text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                <h3 class="font-playfair text-xl font-semibold mb-3">Application Management</h3>
+                <p class="text-cream/70 text-sm leading-relaxed">We handle document preparation, translation, and uploading on university portals like DreamApply to ensure flawless submissions.</p>
+            </div>
+            <div class="reveal glass p-8 rounded-2xl hover:bg-cream/5 transition-colors group" style="transition-delay:200ms;">
+                <i class="fa-solid fa-building-columns text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                <h3 class="font-playfair text-xl font-semibold mb-3">Pre-enrollment (Universitaly)</h3>
+                <p class="text-cream/70 text-sm leading-relaxed">Navigating the complex Universitaly portal step-by-step to secure your official pre-enrollment summary required by the embassy.</p>
+            </div>
+            <div class="reveal glass p-8 rounded-2xl hover:bg-cream/5 transition-colors group">
+                <i class="fa-solid fa-money-bill-wave text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                <h3 class="font-playfair text-xl font-semibold mb-3">Financial Guidance &amp; Scholarships</h3>
+                <p class="text-cream/70 text-sm leading-relaxed">Assistance with PagoPA fee payments and regional scholarship applications (ISEE, DSU) to significantly reduce your tuition and living costs.</p>
+            </div>
+            <div class="reveal glass p-8 rounded-2xl hover:bg-cream/5 transition-colors group" style="transition-delay:100ms;">
+                <i class="fa-solid fa-passport text-3xl text-gold mb-6 group-hover:scale-110 transition-transform"></i>
+                <h3 class="font-playfair text-xl font-semibold mb-3">Visa &amp; Accommodation</h3>
+                <p class="text-cream/70 text-sm leading-relaxed">Expert review of embassy requirements, booking appointments, and securing initial student accommodation before you travel.</p>
+            </div>
+            <div class="reveal glass p-8 rounded-2xl flex flex-col justify-center items-center text-center border-it_red/30 bg-it_red/5" style="transition-delay:200ms;">
+                <h3 class="font-playfair text-2xl font-semibold mb-4 text-it_red">Start Your Journey</h3>
+                <button onclick="openModal('register-modal')" class="px-6 py-3 bg-it_red text-white rounded-full font-bold hover:bg-[#b0222e] transition-colors w-full cursor-pointer">Book Free Consultation</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. TOP UNIVERSITIES (filled from universities-data.js) -->
+    <section class="py-24 px-6 border-y border-cream/10 bg-forest/50" id="universities">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-14 reveal">
+                <p class="text-gold uppercase tracking-[.3em] text-xs mb-3">Top Destinations</p>
+                <h2 class="font-playfair text-4xl md:text-5xl font-bold mb-4">Most Popular Universities</h2>
+                <p class="text-cream/60 max-w-2xl mx-auto">The public universities our students choose most — world-class education at very affordable costs.</p>
+            </div>
+            <div id="featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            <div class="text-center mt-14 reveal">
+                <a href="universities.html" class="inline-flex items-center gap-3 bg-cream text-forest font-bold py-4 px-10 rounded-full hover:bg-gold transition-colors">
+                    View All <span id="uni-count">40+</span> Universities <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. WHY ITALY -->
+    <section class="py-24 bg-cream text-forest">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-playfair text-4xl md:text-5xl font-bold mb-4">Why Italy?</h2>
+                <div class="w-24 h-1 bg-it_green mx-auto"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                <div class="reveal">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-forest/10 flex items-center justify-center mb-6"><i class="fa-solid fa-graduation-cap text-3xl text-forest"></i></div>
+                    <h4 class="font-playfair text-xl font-bold mb-2">Quality Education</h4>
+                    <p class="text-forest/70 text-sm">Home to some of the oldest and highest-ranking universities in the world.</p>
+                </div>
+                <div class="reveal" style="transition-delay:100ms;">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-forest/10 flex items-center justify-center mb-6"><i class="fa-solid fa-piggy-bank text-3xl text-forest"></i></div>
+                    <h4 class="font-playfair text-xl font-bold mb-2">Affordable Costs</h4>
+                    <p class="text-forest/70 text-sm">Significantly lower tuition fees and living costs compared to the rest of Europe.</p>
+                </div>
+                <div class="reveal" style="transition-delay:200ms;">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-forest/10 flex items-center justify-center mb-6"><i class="fa-solid fa-landmark text-3xl text-forest"></i></div>
+                    <h4 class="font-playfair text-xl font-bold mb-2">Cultural Heritage</h4>
+                    <p class="text-forest/70 text-sm">Immerse yourself in unparalleled history, art, architecture, and gastronomy.</p>
+                </div>
+                <div class="reveal" style="transition-delay:300ms;">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-forest/10 flex items-center justify-center mb-6"><i class="fa-solid fa-language text-3xl text-forest"></i></div>
+                    <h4 class="font-playfair text-xl font-bold mb-2">English Programs</h4>
+                    <p class="text-forest/70 text-sm">Hundreds of bachelor's and master's degrees taught entirely in English.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. HOW IT WORKS -->
+    <section class="py-24 px-6 max-w-4xl mx-auto relative">
+        <div class="text-center mb-16 reveal">
+            <h2 class="font-playfair text-4xl md:text-5xl font-bold mb-4">How It Works</h2>
+            <p class="text-cream/60">Your clear path to studying in Italy.</p>
+        </div>
+        <div class="timeline-container relative">
+            <div class="reveal flex flex-col md:flex-row items-center mb-12 relative z-10 w-full group">
+                <div class="md:w-1/2 md:pr-12 md:text-right flex flex-col md:items-end w-full pl-12 md:pl-0 mb-4 md:mb-0">
+                    <h3 class="font-playfair text-2xl font-bold text-gold">1. Free Assessment</h3>
+                    <p class="text-cream/70 text-sm mt-2">We review your academic background and suggest the best suited programs and universities.</p>
+                </div>
+                <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-it_red border-4 border-forest group-hover:scale-150 transition-transform"></div>
+                <div class="md:w-1/2 md:pl-12 w-full hidden md:block"></div>
+            </div>
+            <div class="reveal flex flex-col md:flex-row items-center mb-12 relative z-10 w-full group">
+                <div class="md:w-1/2 md:pr-12 w-full hidden md:block"></div>
+                <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-cream border-4 border-forest group-hover:scale-150 transition-transform"></div>
+                <div class="md:w-1/2 md:pl-12 w-full pl-12">
+                    <h3 class="font-playfair text-2xl font-bold text-gold">2. Document Prep</h3>
+                    <p class="text-cream/70 text-sm mt-2">Translating, legalizing, and formatting your CV, motivation letter, and transcripts.</p>
+                </div>
+            </div>
+            <div class="reveal flex flex-col md:flex-row items-center mb-12 relative z-10 w-full group">
+                <div class="md:w-1/2 md:pr-12 md:text-right flex flex-col md:items-end w-full pl-12 md:pl-0 mb-4 md:mb-0">
+                    <h3 class="font-playfair text-2xl font-bold text-gold">3. University Application</h3>
+                    <p class="text-cream/70 text-sm mt-2">Submitting applications across multiple universities to maximize your acceptance chances.</p>
+                </div>
+                <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-cream border-4 border-forest group-hover:scale-150 transition-transform"></div>
+                <div class="md:w-1/2 md:pl-12 w-full hidden md:block"></div>
+            </div>
+            <div class="reveal flex flex-col md:flex-row items-center mb-12 relative z-10 w-full group">
+                <div class="md:w-1/2 md:pr-12 w-full hidden md:block"></div>
+                <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-cream border-4 border-forest group-hover:scale-150 transition-transform"></div>
+                <div class="md:w-1/2 md:pl-12 w-full pl-12">
+                    <h3 class="font-playfair text-2xl font-bold text-gold">4. Universitaly &amp; Acceptance</h3>
+                    <p class="text-cream/70 text-sm mt-2">Receiving your admission letter and finalizing the mandatory Pre-enrollment on Universitaly.</p>
+                </div>
+            </div>
+            <div class="reveal flex flex-col md:flex-row items-center relative z-10 w-full group">
+                <div class="md:w-1/2 md:pr-12 md:text-right flex flex-col md:items-end w-full pl-12 md:pl-0 mb-4 md:mb-0">
+                    <h3 class="font-playfair text-2xl font-bold text-it_green">5. Visa &amp; Travel</h3>
+                    <p class="text-cream/70 text-sm mt-2">Preparing embassy documents, financial proofs, housing, and getting ready to fly to Italy!</p>
+                </div>
+                <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-it_green border-4 border-forest group-hover:scale-150 transition-transform shadow-[0_0_15px_#009246]"></div>
+                <div class="md:w-1/2 md:pl-12 w-full hidden md:block"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. TESTIMONIALS & FAQ -->
+    <section class="py-24 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 border-t border-cream/10">
+        <div class="reveal">
+            <h2 class="font-playfair text-3xl md:text-4xl font-bold mb-10">Student Success Stories</h2>
+            <div class="space-y-6">
+                <div class="glass p-6 rounded-2xl relative">
+                    <i class="fa-solid fa-quote-left absolute top-6 right-6 text-4xl text-white/5"></i>
+                    <p class="text-cream/80 text-sm leading-relaxed mb-4 italic">"Road to Italy made the impossible seem easy. Their handling of the Universitaly portal and my visa documents saved me months of stress. I'm now studying Engineering in Milan!"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-it_red/20 flex items-center justify-center text-it_red font-bold">A</div>
+                        <div><h4 class="font-bold text-sm">Ahmed K.</h4><p class="text-xs text-cream/50">Politecnico di Milano</p></div>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl relative">
+                    <i class="fa-solid fa-quote-left absolute top-6 right-6 text-4xl text-white/5"></i>
+                    <p class="text-cream/80 text-sm leading-relaxed mb-4 italic">"I didn't even know about regional scholarships until I talked to them. They guided me through the ISEE process, and now my tuition is almost zero. Highly recommended."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-it_green/20 flex items-center justify-center text-it_green font-bold">S</div>
+                        <div><h4 class="font-bold text-sm">Sara M.</h4><p class="text-xs text-cream/50">University of Padua</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reveal" style="transition-delay:200ms;">
+            <h2 class="font-playfair text-3xl md:text-4xl font-bold mb-10">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="glass rounded-xl overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center font-bold focus:outline-none cursor-pointer"><span>What are the language requirements?</span><i class="fa-solid fa-plus text-it_red transition-transform duration-300"></i></button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6"><p class="pb-4 text-sm text-cream/70">For English-taught programs, a B2 level is generally required (IELTS 5.5-6.0, TOEFL, or Duolingo in some cases). For Italian-taught, a B2 Italian certificate (CILS, CELI) is needed.</p></div>
+                </div>
+                <div class="glass rounded-xl overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center font-bold focus:outline-none cursor-pointer"><span>Is there a specific GPA required?</span><i class="fa-solid fa-plus text-it_red transition-transform duration-300"></i></button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6"><p class="pb-4 text-sm text-cream/70">While higher GPAs offer more options, many universities look at the overall profile. We evaluate your transcripts and match you with universities where you have the highest chance of acceptance.</p></div>
+                </div>
+                <div class="glass rounded-xl overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center font-bold focus:outline-none cursor-pointer"><span>What are the living costs in Italy?</span><i class="fa-solid fa-plus text-it_red transition-transform duration-300"></i></button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6"><p class="pb-4 text-sm text-cream/70">Living costs vary by city. Northern cities like Milan are more expensive (€800-€1200/month), while southern or smaller cities can be around €600-€800/month including accommodation.</p></div>
+                </div>
+                <div class="glass rounded-xl overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex justify-between items-center font-bold focus:outline-none cursor-pointer"><span>Can I get a scholarship?</span><i class="fa-solid fa-plus text-it_red transition-transform duration-300"></i></button>
+                    <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6"><p class="pb-4 text-sm text-cream/70">Yes. Tuition is based on family income (ISEE), and regional DSU scholarships can cover tuition, housing, meals and a yearly stipend for eligible students. We guide you through both.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. ELIGIBILITY -->
+    <section class="py-24 px-6 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-it_red/10 pointer-events-none"></div>
+        <div class="max-w-3xl mx-auto glass p-8 md:p-12 rounded-3xl relative z-10 border-t border-it_red/30 shadow-2xl reveal">
+            <div class="text-center mb-8">
+                <h2 class="font-playfair text-3xl font-bold mb-2">Check Your Eligibility</h2>
+                <p class="text-cream/70 text-sm">Fill out this quick form and our experts will assess your chances for free.</p>
+            </div>
+            <form onsubmit="handleEligibility(event)" class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div><label class="block text-xs uppercase tracking-wider text-cream/60 mb-2">Full Name</label><input name="name" type="text" required class="form-input"></div>
+                    <div><label class="block text-xs uppercase tracking-wider text-cream/60 mb-2">Phone Number / WhatsApp</label><input name="phone" type="tel" required class="form-input"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div><label class="block text-xs uppercase tracking-wider text-cream/60 mb-2">Current GPA / Grade</label><input name="gpa" type="text" placeholder="e.g., 85% or 3.2" required class="form-input"></div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-cream/60 mb-2">Desired Major</label>
+                        <select name="major" required class="form-input appearance-none">
+                            <option value="">Select a field...</option>
+                            <option value="Engineering & Architecture">Engineering &amp; Architecture</option>
+                            <option value="Computer Science & AI">Computer Science &amp; AI</option>
+                            <option value="Medicine & Health">Medicine &amp; Health</option>
+                            <option value="Business & Economics">Business &amp; Economics</option>
+                            <option value="Arts & Humanities">Arts &amp; Humanities</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-4 mt-4 bg-cream text-forest font-bold rounded-lg hover:bg-gold transition-colors flex justify-center items-center gap-2 cursor-pointer">Check My Chances <i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+            <div id="eligibility-success" class="hidden absolute inset-0 bg-forest/95 rounded-3xl flex-col items-center justify-center text-center p-8 backdrop-blur-sm z-20">
+                <i class="fa-solid fa-circle-check text-5xl text-it_green mb-4"></i>
+                <h3 class="font-playfair text-2xl font-bold mb-2">Request Received!</h3>
+                <p class="text-cream/70 text-sm">Your profile looks promising. An advisor will contact you on WhatsApp shortly to discuss your options.</p>
+                <button onclick="document.getElementById('eligibility-success').classList.add('hidden')" class="mt-6 text-sm underline text-cream/50 hover:text-cream cursor-pointer">Close</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-cream/10 pt-16 pb-8 bg-[#0d1f19]" id="contact">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <div>
+                <h2 class="font-playfair text-2xl font-bold text-cream mb-4">Road to Italy</h2>
+                <p class="text-sm text-cream/60 leading-relaxed mb-6">Your trusted partner for educational consultancy, university admissions, and visa guidance for Italy.</p>
+                <div class="flex gap-4">
+                    <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-cream/5 flex items-center justify-center hover:bg-it_red hover:text-white transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="TikTok" class="w-10 h-10 rounded-full bg-cream/5 flex items-center justify-center hover:bg-it_red hover:text-white transition-colors"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-cream/5 flex items-center justify-center hover:bg-it_red hover:text-white transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4 text-gold">Quick Links</h3>
+                <ul class="space-y-3 text-sm text-cream/70">
+                    <li><a href="index.html" class="hover:text-cream transition-colors">Home</a></li>
+                    <li><a href="#services" class="hover:text-cream transition-colors">Our Services</a></li>
+                    <li><a href="universities.html" class="hover:text-cream transition-colors">Universities</a></li>
+                    <li><a href="#" class="hover:text-cream transition-colors">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-lg mb-4 text-gold">Contact Us</h3>
+                <ul class="space-y-4 text-sm text-cream/70">
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-location-dot mt-1 text-it_red"></i><span>Sheikh Zayed, Egypt</span></li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-envelope text-it_red"></i><a href="mailto:yossefabdelkarem9@gmail.com" class="hover:text-cream transition-colors">yossefabdelkarem9@gmail.com</a></li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-phone text-it_red"></i><a href="tel:+201027058317" dir="ltr" class="hover:text-cream transition-colors">+20 102 705 8317</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center pt-8 border-t border-cream/10 text-xs text-cream/40">&copy; 2026 Road to Italy. All rights reserved.</div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/201027058317" target="_blank" rel="noopener" aria-label="WhatsApp" class="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center text-3xl shadow-lg hover:scale-110 transition-transform z-40 hover:shadow-[0_0_20px_#25D366]"><i class="fa-brands fa-whatsapp"></i></a>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="fixed inset-0 z-[70] flex items-center justify-center px-4 bg-forest/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-cream text-forest w-full max-w-md rounded-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 relative" id="modal-content">
+            <div class="relative bg-it_red text-white p-6 text-center">
+                <button onclick="closeModal('register-modal')" aria-label="Close" class="absolute top-4 right-4 text-white/70 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="font-playfair text-2xl font-bold">Start Your Registration</h3>
+                <p class="text-sm mt-1 text-white/80">Step 1 towards your Italian degree</p>
+            </div>
+            <div class="p-8">
+                <form onsubmit="handleRegistration(event)" class="space-y-4">
+                    <div><label class="block text-xs font-bold text-forest/70 uppercase mb-1">Full Name</label><input name="name" type="text" required class="w-full border-b-2 border-forest/20 py-2 focus:border-it_red outline-none bg-transparent transition-colors font-semibold text-forest"></div>
+                    <div><label class="block text-xs font-bold text-forest/70 uppercase mb-1">Email</label><input name="email" type="email" required class="w-full border-b-2 border-forest/20 py-2 focus:border-it_red outline-none bg-transparent transition-colors font-semibold text-forest"></div>
+                    <div><label class="block text-xs font-bold text-forest/70 uppercase mb-1">WhatsApp Number</label><input name="phone" type="tel" required class="w-full border-b-2 border-forest/20 py-2 focus:border-it_red outline-none bg-transparent transition-colors font-semibold text-forest"></div>
+                    <button type="submit" class="w-full py-4 mt-6 bg-forest text-cream rounded-xl font-bold hover:bg-it_red hover:text-white transition-colors shadow-lg cursor-pointer">Submit Application</button>
+                </form>
+                <div id="register-success" class="hidden absolute inset-0 bg-cream flex-col items-center justify-center text-center p-8 z-10">
+                    <div class="w-16 h-16 rounded-full bg-it_green/20 text-it_green flex items-center justify-center text-3xl mb-4"><i class="fa-solid fa-check"></i></div>
+                    <h3 class="font-playfair text-2xl font-bold mb-2">Welcome Aboard!</h3>
+                    <p class="text-forest/70 text-sm">We have received your details. Check your WhatsApp shortly for the next steps.</p>
+                    <button onclick="closeModal('register-modal')" class="mt-8 px-6 py-2 border border-forest text-forest rounded-lg hover:bg-forest hover:text-cream transition-colors cursor-pointer">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="universities-data.js"></script>
+    <script src="site.js"></script>
+    <script>
+        // Featured universities
+        (function () {
+            const grid = document.getElementById('featured-grid');
+            document.getElementById('uni-count').textContent = UNIVERSITIES.length;
+            grid.innerHTML = UNIVERSITIES.filter(u => u.featured).map((u, i) => `
+                <a href="universities.html#${u.id}" class="uni-card reveal group" style="transition-delay:${i * 100}ms">
+                    <div class="relative">
+                        ${imageHTML(u)}
+                        <span class="uni-badge"><i class="fa-solid fa-location-dot"></i> ${u.city}</span>
+                        <span class="uni-year">Est. ${u.founded}</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-1">
+                        <h3 class="font-playfair text-xl font-bold mb-1">${u.name}</h3>
+                        <p class="text-cream/50 text-xs mb-3" dir="rtl">${u.ar}</p>
+                        <p class="text-cream/70 text-sm leading-relaxed mb-4 line-clamp-3">${u.about}</p>
+                        <div class="flex flex-wrap gap-1.5 mb-5">${u.tags.slice(0, 3).map(t => `<span class="chip">${t}</span>`).join('')}</div>
+                        <span class="mt-auto text-gold text-sm font-semibold inline-flex items-center gap-2 group-hover:gap-3 transition-all">Programs &amp; details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </a>`).join('');
+            observeNewReveals(grid);
+        })();
+    </script>
+</body>
+</html>
