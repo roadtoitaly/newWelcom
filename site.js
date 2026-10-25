@@ -62,7 +62,6 @@ function initAnalytics() {
 
 /* ================== Send lead to Google Sheet ================== */
 async function sendToSheet(payload) {
-  if (typeof gtag === 'function') gtag('event', 'generate_lead', { event_category: 'Registration', event_label: payload.source });
   if (!SHEET_WEB_APP_URL) {
     console.error('SHEET_WEB_APP_URL is empty — set it in site.js so leads reach your Google Sheet.');
     throw new Error('not-configured');
