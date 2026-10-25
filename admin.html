@@ -1,143 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Road to Italy | Admin Dashboard</title>
-    <!-- Tailwind CSS -->
+    <title>Road to Italy | Analytics Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        forest: '#11221c',
-                        cream: '#f9f6f0',
-                        it_red: '#ce2b37',
-                        it_green: '#009246',
-                        gold: '#d4af37',
-                    },
-                    fontFamily: {
-                        montserrat: ['"Montserrat"', 'sans-serif'],
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: {
+            colors: { forest: '#11221c', cream: '#f9f6f0', it_red: '#ce2b37', it_green: '#009246', gold: '#d4af37' },
+            fontFamily: { montserrat: ['"Montserrat"', 'sans-serif'] }
+        } } };
     </script>
+    <style>
+        .bar { transition: width .5s ease; }
+        .empty { color: rgba(249,246,240,.42); }
+    </style>
 </head>
-<body class="bg-forest text-cream font-montserrat antialiased min-h-screen flex flex-col">
-
-    <!-- Top Navbar -->
-    <header class="bg-[#0d1f19] border-b border-cream/10 px-8 py-5 flex justify-between items-center shadow-md">
+<body class="bg-forest text-cream font-montserrat antialiased min-h-screen">
+    <header class="bg-[#0d1f19] border-b border-cream/10 px-6 md:px-10 py-5 flex flex-wrap gap-4 justify-between items-center shadow-md">
         <div class="flex items-center gap-3">
             <span class="w-3 h-3 rounded-full bg-it_green animate-pulse"></span>
-            <h1 class="text-xl font-bold tracking-wide text-gold">🇮🇹 Road to Italy - Admin Dashboard</h1>
+            <div><h1 class="text-xl font-bold tracking-wide text-gold">🇮🇹 Road to Italy</h1><p class="text-[10px] uppercase tracking-[.25em] text-cream/40">Executive analytics dashboard</p></div>
         </div>
-        <div class="flex items-center gap-4">
-            <span class="text-xs bg-cream/5 text-cream/70 px-4 py-1.5 rounded-full border border-cream/10">
-                <i class="fa-solid fa-server mr-2 text-it_green"></i>Oracle Server: Online
-            </span>
-            <a href="index.html" target="_blank" class="text-xs bg-it_red/20 text-it_red hover:bg-it_red hover:text-white px-4 py-1.5 rounded-full transition-colors border border-it_red/30">
-                <i class="fa-solid fa-globe mr-1"></i> View Website
-            </a>
+        <div class="flex items-center gap-3">
+            <span id="connection" class="text-xs bg-cream/5 text-cream/60 px-3 py-2 rounded-full border border-cream/10"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Loading data</span>
+            <a href="index.html" target="_blank" rel="noopener" class="text-xs bg-it_red/20 text-it_red hover:bg-it_red hover:text-white px-4 py-2 rounded-full transition-colors border border-it_red/30"><i class="fa-solid fa-globe mr-1"></i>View Website</a>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 p-8 max-w-7xl mx-auto w-full space-y-8">
-        
-        <!-- Welcome Banner -->
-        <div class="bg-gradient-to-r from-cream/5 to-cream/[0.02] border border-cream/10 p-8 rounded-3xl backdrop-blur-md flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-                <h2 class="text-3xl font-bold mb-2">Welcome back, Admin! 👋</h2>
-                <p class="text-cream/60 text-sm">هذه لوحة التحكم المركزية لمتابعة أداء موقع "Road to Italy" وحركة تسجيلات الطلاب والزوار لحظياً.</p>
+    <main class="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
+        <section class="flex flex-col md:flex-row justify-between gap-5 items-start md:items-end">
+            <div><p class="text-gold text-xs uppercase tracking-[.25em] mb-2">Performance overview</p><h2 class="text-3xl md:text-4xl font-bold">Welcome back, Admin <span class="text-gold">👋</span></h2><p class="text-cream/55 text-sm mt-2">كل ما يحتاجه صاحب الشركة لفهم حركة الزوار وتحويلهم إلى عملاء.</p></div>
+            <div class="flex items-center gap-2">
+                <select id="period" class="bg-[#0d1f19] border border-cream/15 rounded-xl px-4 py-2 text-sm outline-none focus:border-gold">
+                    <option value="1">Today</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option>
+                </select>
+                <button id="refresh" class="w-10 h-10 rounded-xl bg-gold/10 text-gold hover:bg-gold hover:text-forest transition-colors" title="Refresh data"><i class="fa-solid fa-rotate"></i></button>
             </div>
-            <div class="flex gap-4">
-                <div class="bg-forest border border-cream/10 px-6 py-3 rounded-2xl text-center">
-                    <span class="block text-xs text-cream/50 uppercase tracking-widest mb-1">Total Leads</span>
-                    <span class="text-2xl font-bold text-gold" id="stat-leads">50+</span>
-                </div>
-                <div class="bg-forest border border-cream/10 px-6 py-3 rounded-2xl text-center">
-                    <span class="block text-xs text-cream/50 uppercase tracking-widest mb-1">Bot Status</span>
-                    <span class="text-2xl font-bold text-it_green">Active 24/7</span>
-                </div>
-            </div>
-        </div>
+        </section>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-cream/5 border border-cream/10 p-6 rounded-2xl shadow-lg hover:border-gold/30 transition-colors">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-cream/60 text-sm font-medium">Website Visitors (GA4)</span>
-                    <div class="w-10 h-10 rounded-xl bg-it_green/10 text-it_green flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                </div>
-                <h3 class="text-3xl font-bold mb-1" id="total-visitors">Connected</h3>
-                <p class="text-xs text-cream/40">تتم مطابقة البيانات عبر Google Analytics 4</p>
-            </div>
+        <section id="error" class="hidden rounded-2xl border border-it_red/40 bg-it_red/10 p-4 text-sm text-red-200"></section>
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div class="bg-cream/5 border border-cream/10 p-5 rounded-2xl"><div class="flex justify-between text-cream/55 text-xs uppercase tracking-wider"><span>Unique visitors</span><i class="fa-solid fa-users text-it_green text-lg"></i></div><strong id="visitors" class="block text-3xl mt-4">—</strong><span class="text-xs text-cream/40">جلسات مختلفة</span></div>
+            <div class="bg-cream/5 border border-cream/10 p-5 rounded-2xl"><div class="flex justify-between text-cream/55 text-xs uppercase tracking-wider"><span>Page views</span><i class="fa-solid fa-eye text-gold text-lg"></i></div><strong id="pageViews" class="block text-3xl mt-4">—</strong><span class="text-xs text-cream/40">إجمالي فتح الصفحات</span></div>
+            <div class="bg-cream/5 border border-cream/10 p-5 rounded-2xl"><div class="flex justify-between text-cream/55 text-xs uppercase tracking-wider"><span>Avg. duration</span><i class="fa-solid fa-clock text-blue-300 text-lg"></i></div><strong id="duration" class="block text-3xl mt-4">—</strong><span class="text-xs text-cream/40">متوسط وقت البقاء</span></div>
+            <div class="bg-cream/5 border border-cream/10 p-5 rounded-2xl"><div class="flex justify-between text-cream/55 text-xs uppercase tracking-wider"><span>Form opens</span><i class="fa-solid fa-file-pen text-it_red text-lg"></i></div><strong id="formOpens" class="block text-3xl mt-4">—</strong><span class="text-xs text-cream/40"><span id="submissions">—</span> إرسال ناجح</span></div>
+        </section>
 
-            <div class="bg-cream/5 border border-cream/10 p-6 rounded-2xl shadow-lg hover:border-gold/30 transition-colors">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-cream/60 text-sm font-medium">Google Sheets Leads</span>
-                    <div class="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-file-excel"></i>
-                    </div>
-                </div>
-                <h3 class="text-3xl font-bold mb-1">Synced</h3>
-                <p class="text-xs text-cream/40">تحديث لحظي لبيانات الطلاب المسجلين[cite: 1]</p>
-            </div>
+        <section class="grid lg:grid-cols-5 gap-6">
+            <div class="lg:col-span-3 bg-cream/5 border border-cream/10 rounded-2xl p-6"><div class="flex justify-between items-center mb-6"><div><h3 class="font-bold text-lg">Visitor activity</h3><p class="text-xs text-cream/45 mt-1">عدد الأحداث المسجلة يومياً</p></div><i class="fa-solid fa-chart-column text-gold"></i></div><div id="daily" class="h-56 flex items-end gap-2"></div></div>
+            <div class="lg:col-span-2 bg-cream/5 border border-cream/10 rounded-2xl p-6"><h3 class="font-bold text-lg mb-1">Forms conversion</h3><p class="text-xs text-cream/45 mb-6">فتح النموذج مقابل الإرسال الناجح</p><div id="forms" class="space-y-5"></div></div>
+        </section>
 
-            <div class="bg-cream/5 border border-cream/10 p-6 rounded-2xl shadow-lg hover:border-gold/30 transition-colors">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-cream/60 text-sm font-medium">WhatsApp Bot Sessions</span>
-                    <div class="w-10 h-10 rounded-xl bg-it_red/10 text-it_red flex items-center justify-center text-lg">
-                        <i class="fa-brands fa-whatsapp"></i>
-                    </div>
-                </div>
-                <h3 class="text-3xl font-bold mb-1">Running</h3>
-                <p class="text-xs text-cream/40">تعمل على مدار الساعة عبر PM2 وسيرفر Oracle</p>
-            </div>
-        </div>
+        <section class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-cream/5 border border-cream/10 rounded-2xl p-6"><h3 class="font-bold text-lg mb-5"><i class="fa-solid fa-file-lines text-gold mr-2"></i>Most viewed pages</h3><div id="pages" class="space-y-3"></div></div>
+            <div class="bg-cream/5 border border-cream/10 rounded-2xl p-6"><h3 class="font-bold text-lg mb-5"><i class="fa-solid fa-route text-it_green mr-2"></i>Traffic sources</h3><div id="sources" class="space-y-3"></div></div>
+        </section>
 
-        <!-- Quick Actions & Info Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="bg-cream/5 border border-cream/10 p-8 rounded-2xl">
-                <h3 class="text-xl font-bold mb-4 text-gold"><i class="fa-solid fa-bolt mr-2"></i> روابط سريعة وإدارية</h3>
-                <ul class="space-y-3 text-sm text-cream/80">
-                    <li class="flex items-center justify-between p-3 rounded-xl bg-forest border border-cream/5">
-                        <span>📊 ملف Google Sheets الأساسي للطلاب</span>
-                        <a href="#" target="_blank" class="text-gold hover:underline text-xs"><i class="fa-solid fa-external-link-alt mr-1"></i> فتح الشيت</a>
-                    </li>
-                    <li class="flex items-center justify-between p-3 rounded-xl bg-forest border border-cream/5">
-                        <span>📈 لوحة تحكم Google Analytics (GA4)</span>
-                        <a href="https://analytics.google.com" target="_blank" class="text-gold hover:underline text-xs"><i class="fa-solid fa-external-link-alt mr-1"></i> فتح GA4[cite: 1]</a>
-                    </li>
-                    <li class="flex items-center justify-between p-3 rounded-xl bg-forest border border-cream/5">
-                        <span>💻 إدارة السيرفر (Panel.sh)</span>
-                        <span class="text-it_green text-xs font-mono">./panel.sh</span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="bg-cream/5 border border-cream/10 p-8 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <h3 class="text-xl font-bold mb-4 text-gold"><i class="fa-solid fa-circle-info mr-2"></i> ملاحظة نظام المتابعة</h3>
-                    <p class="text-cream/70 text-sm leading-relaxed mb-4">
-                        يتم تجميع كافة تفاعلات الزوار وزيارات الموقع عبر كود التتبع المُدرج في صفحة الهبوط (<code class="text-gold bg-forest px-2 py-0.5 rounded">index.html</code>)[cite: 1]، بينما تُنظم بيانات الحجز والليدز تلقائياً داخل جدول Google Sheets الخاص بك[cite: 1].
-                    </p>
-                </div>
-                <div class="border-t border-cream/10 pt-4 text-xs text-cream/40 text-center">
-                    Road to Italy Management System &copy; 2026
-                </div>
-            </div>
-        </div>
-
+        <section class="bg-gradient-to-r from-gold/10 to-transparent border border-gold/20 rounded-2xl p-5 flex gap-4 items-start"><i class="fa-solid fa-shield-halved text-gold mt-1"></i><div><h3 class="font-bold text-sm">Privacy-friendly tracking</h3><p class="text-xs text-cream/55 mt-1 leading-relaxed">يتم تسجيل session ID عشوائي وإحصاءات مجمعة فقط. لا يتم إرسال الاسم أو البريد أو الهاتف إلى ورقة Analytics؛ بيانات العملاء تظل في ورقة leads الأصلية.</p></div></section>
+        <p class="text-center text-[11px] text-cream/30">Last updated: <span id="updated">—</span> · Road to Italy Management System © 2026</p>
     </main>
 
+    <script>
+        const ANALYTICS_URL = 'https://script.google.com/macros/s/AKfycbziVO3kFjPy4kww21Fwdo5DypjxLh3ZYEJoK1G7qGgw9TaIKy9T_OtXo8vnp-tcKjZO/exec';
+        const $ = id => document.getElementById(id);
+        const number = value => new Intl.NumberFormat().format(value || 0);
+        const duration = seconds => { seconds = Number(seconds) || 0; return seconds < 60 ? seconds + 's' : Math.floor(seconds / 60) + 'm ' + (seconds % 60) + 's'; };
+        const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
+        function rows(data, target, suffix) {
+            const entries = Object.entries(data || {}).sort((a, b) => b[1] - a[1]).slice(0, 6);
+            $(target).innerHTML = entries.length ? entries.map(([label, value]) => `<div><div class="flex justify-between text-xs mb-1"><span class="text-cream/70 truncate pr-3">${escapeHTML(label)}</span><b>${number(value)}${suffix || ''}</b></div><div class="h-1.5 bg-forest rounded-full overflow-hidden"><div class="bar h-full bg-gold rounded-full" style="width:${Math.max(6, Math.round(value / entries[0][1] * 100))}%"></div></div></div>`).join('') : '<p class="empty text-sm">لا توجد بيانات في هذه الفترة.</p>';
+        }
+        function render(data) {
+            $('visitors').textContent = number(data.visitors); $('pageViews').textContent = number(data.pageViews); $('duration').textContent = duration(data.averageDurationSeconds); $('formOpens').textContent = number(data.formOpens); $('submissions').textContent = number(data.formSubmissions); $('updated').textContent = new Date(data.updatedAt).toLocaleString();
+            const daily = Object.entries(data.daily || {}).sort((a, b) => a[0].localeCompare(b[0])).slice(-14), max = Math.max(...daily.map(x => x[1]), 1);
+            $('daily').innerHTML = daily.length ? daily.map(([day, value]) => `<div class="flex-1 h-full flex flex-col justify-end items-center gap-2 group"><span class="opacity-0 group-hover:opacity-100 text-[10px] text-gold">${value}</span><div class="w-full max-w-8 bg-it_green/70 hover:bg-it_green rounded-t-md bar" style="height:${Math.max(4, value / max * 82)}%"></div><span class="text-[9px] text-cream/40">${day.slice(5)}</span></div>`).join('') : '<p class="empty text-sm m-auto">لا توجد بيانات بعد.</p>';
+            const forms = Object.entries(data.forms || {});
+            $('forms').innerHTML = forms.length ? forms.map(([form, item]) => `<div><div class="flex justify-between text-sm mb-2"><span>${escapeHTML(form)}</span><b class="text-gold">${number(item.submissions)} <small class="text-cream/40 font-normal">/ ${number(item.opens)}</small></b></div><div class="h-2 bg-forest rounded-full overflow-hidden"><div class="bar h-full bg-it_red rounded-full" style="width:${item.opens ? Math.min(100, item.submissions / item.opens * 100) : 0}%"></div></div><p class="text-[10px] text-cream/40 mt-1">${item.opens ? Math.round(item.submissions / item.opens * 100) : 0}% conversion</p></div>`).join('') : '<p class="empty text-sm">لا توجد بيانات للنماذج بعد.</p>';
+            rows(data.pages, 'pages'); rows(data.sources, 'sources');
+        }
+        async function load() {
+            $('connection').innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Loading data'; $('error').classList.add('hidden');
+            try { const response = await fetch(ANALYTICS_URL + '?days=' + $('period').value + '&t=' + Date.now()); if (!response.ok) throw new Error('HTTP ' + response.status); const data = await response.json(); if (!data.ok) throw new Error('Analytics endpoint returned an error'); render(data); $('connection').innerHTML = '<i class="fa-solid fa-circle-check text-it_green mr-2"></i>Live data'; }
+            catch (error) { $('connection').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-it_red mr-2"></i>Offline'; $('error').textContent = 'تعذر تحميل بيانات Analytics. تأكد من نشر apps-script.gs كـ Web app مع صلاحية Anyone ثم اضغط تحديث.'; $('error').classList.remove('hidden'); console.error(error); }
+        }
+        $('period').addEventListener('change', load); $('refresh').addEventListener('click', load); load(); setInterval(load, 300000);
+    </script>
 </body>
 </html>
