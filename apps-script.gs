@@ -21,12 +21,17 @@ function doPost(e) {
     ]);
     return json_({ ok: true });
   }
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-  sheet.appendRow([
+  const isBot = String(d.type || '').toLowerCase() === 'bot'
+    || /bot|whatsapp/i.test(String(d.source || ''))
+    || !d.source;
+  const sheet = getDataSheet_(isBot ? 'Bot_Data' : 'Road_to_Italy');
+  const row = sheet.getLastRow() + 1;
+  sheet.getRange(row, 1, 1, 9).setValues([[
     new Date(), d.source || '', d.name || '', d.email || '', d.phone || '',
     d.gpa || '', d.major || '', d.interest || '', d.page || ''
-  ]);
-  return json_({ ok: true });
+  ]]);
+  setContactStatus_(sheet, row);
+  return json_({ ok: true, sheet: sheet.getName() });
 }
 
 function doGet(e) {
@@ -124,6 +129,28 @@ function getAnalyticsSheet_() {
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   }
   return sheet;
+}
+
+function getDataSheet_(name) {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = spreadsheet.getSheetByName(name);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(name);
+  }
+  return sheet;
+}
+
+function setContactStatus_(sheet, row) {
+  const lastColumn = Math.max(sheet.getLastColumn(), 9);
+  const headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0].map(value => String(value).trim().toLowerCase());
+  let statusColumn = headers.findIndex(header => header === 'حالة التواصل' || header === 'contact status') + 1;
+  if (!statusColumn) {
+    statusColumn = lastColumn + 1;
+    sheet.getRange(1, statusColumn).setValue('حالة التواصل');
+  }
+  if (!sheet.getRange(row, statusColumn).getValue()) {
+    sheet.getRange(row, statusColumn).setValue('لم يتم التواصل');
+  }
 }
 
 function json_(data) {

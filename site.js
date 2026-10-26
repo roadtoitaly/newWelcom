@@ -1,6 +1,6 @@
 /* ================== CONFIG ================== */
 // Paste your Google Apps Script Web App URL here (see apps-script.gs for the setup steps)
-const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzLhM8epc5ehg_H3OAgdnf5xvkoOkSpr9aR5Q1egWIGIpxGLAKtj8UoFrtYcalUEjLN/exec';
+const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz7LEGEStHmhWvin_EMBIvVrJugdY7LEJp9vx88TC-f_dWUFkf1DUso9IoaPJA9aygG/exec';
 const WA_NUMBER = '201027058317';
 const ANALYTICS_SESSION_KEY = 'road_to_italy_session';
 
