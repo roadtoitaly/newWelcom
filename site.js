@@ -1,6 +1,6 @@
 /* ================== CONFIG ================== */
 // Paste your Google Apps Script Web App URL here (see apps-script.gs for the setup steps)
-const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyouM5WBKzqXOoT2ULQYlryGHHn3ja1g2cFti0X8kjC7nO5-qVwlmBMy1wHttJR2Agc/exec';
+const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw33Q9igIFLAdpdM5nI9Vqu4KXEtzFv2TcVvsp7jBHVkmp9iWXp_6Sb7PdGsr59P2bX/exec';
 const WA_NUMBER = '201027058317';
 const ANALYTICS_SESSION_KEY = 'road_to_italy_session';
 
@@ -100,6 +100,36 @@ function showFormError(form) {
 }
 function clearFormError(form) { const b = form.querySelector('.form-error'); if (b) b.remove(); }
 
+function getFormValue(form, keys) {
+  const normalized = Array.isArray(keys) ? keys : [keys];
+  for (const key of normalized) {
+    const field = form.elements.namedItem ? form.elements.namedItem(key) : null;
+    if (field && field.value !== undefined) return field.value.trim();
+    const fallback = form.querySelector('[name="' + key + '"]');
+    if (fallback && fallback.value !== undefined) return fallback.value.trim();
+  }
+  return '';
+}
+
+function buildLeadPayload(form, type) {
+  if (type === 'register') {
+    return {
+      name: getFormValue(form, ['name', 'fullName', 'full_name']),
+      email: getFormValue(form, ['email', 'emailAddress', 'email_address']),
+      phone: getFormValue(form, ['phone', 'phoneNumber', 'whatsapp', 'mobile']),
+      interest: getFormValue(form, ['interest', 'studyInterest', 'study_interest', 'university']),
+      rawPayload: Object.fromEntries(Array.from(form.elements).filter(el => el && el.name).map(el => [el.name, el.value]))
+    };
+  }
+  return {
+    name: getFormValue(form, ['name', 'fullName', 'full_name']),
+    phone: getFormValue(form, ['phone', 'phoneNumber', 'whatsapp', 'mobile']),
+    gpa: getFormValue(form, ['gpa', 'grade', 'currentGpa']),
+    major: getFormValue(form, ['major', 'desiredMajor', 'fieldOfStudy']),
+    rawPayload: Object.fromEntries(Array.from(form.elements).filter(el => el && el.name).map(el => [el.name, el.value]))
+  };
+}
+
 /* ================== Register modal ================== */
 function openModal(id) {
   const m = document.getElementById(id); if (!m) return;
@@ -119,7 +149,15 @@ async function handleRegistration(e) {
   const form = e.target, btn = form.querySelector('button[type=submit]');
   clearFormError(form); setBusy(btn, true);
   try {
-    await sendToSheet({ source: 'Register Modal', name: form.elements.name.value, email: form.elements.email.value, phone: form.elements.phone.value, interest: form.elements.interest ? form.elements.interest.value : '' });
+    const payload = buildLeadPayload(form, 'register');
+    await sendToSheet({
+      source: 'Register Modal',
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      interest: payload.interest,
+      rawPayload: payload.rawPayload
+    });
     trackEvent('form_submit', { form: 'Register Modal' });
     const s = document.getElementById('register-success'); s.classList.remove('hidden'); s.classList.add('flex'); form.reset();
   } catch (err) { showFormError(form); }
@@ -130,7 +168,15 @@ async function handleEligibility(e) {
   const form = e.target, btn = form.querySelector('button[type=submit]');
   clearFormError(form); setBusy(btn, true);
   try {
-    await sendToSheet({ source: 'Eligibility Form', name: form.elements.name.value, phone: form.elements.phone.value, gpa: form.elements.gpa.value, major: form.elements.major.value });
+    const payload = buildLeadPayload(form, 'eligibility');
+    await sendToSheet({
+      source: 'Eligibility Form',
+      name: payload.name,
+      phone: payload.phone,
+      gpa: payload.gpa,
+      major: payload.major,
+      rawPayload: payload.rawPayload
+    });
     trackEvent('form_submit', { form: 'Eligibility Form' });
     const s = document.getElementById('eligibility-success'); s.classList.remove('hidden'); s.classList.add('flex'); form.reset();
   } catch (err) { showFormError(form); }

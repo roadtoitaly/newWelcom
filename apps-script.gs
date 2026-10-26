@@ -27,13 +27,7 @@ function doPost(e) {
     || /bot|whatsapp/i.test(String(d.source || ''))
     || !d.source;
   const sheet = getDataSheet_(isBot ? 'Bot_Data' : 'Road_to_Italy');
-  const row = sheet.getLastRow() + 1;
-  sheet.getRange(row, 1, 1, 9).setValues([[
-    new Date(), d.source || '', d.name || '', d.email || '', d.phone || '',
-    d.gpa || '', d.major || '', d.interest || '', d.page || ''
-  ]]);
-  formatTimestamp_(sheet, row);
-  setContactStatus_(sheet, row);
+  appendLeadRow_(sheet, d, isBot);
   return json_({ ok: true, sheet: sheet.getName() });
 }
 
@@ -143,6 +137,55 @@ function getDataSheet_(name) {
   }
   sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   return sheet;
+}
+
+function appendLeadRow_(sheet, d, isBot) {
+  const baseHeaders = ['Timestamp', 'Source', 'Name', 'Email', 'Phone', 'GPA', 'Major', 'Interest', 'Page'];
+  const extraHeaders = ['Raw Payload', 'حالة التواصل'];
+  ensureHeaders_(sheet, baseHeaders.concat(extraHeaders));
+
+  const totalColumns = sheet.getLastColumn();
+  const row = sheet.getLastRow() + 1;
+  const values = Array(totalColumns).fill('');
+  const headerRow = sheet.getRange(1, 1, 1, totalColumns).getValues()[0].map(value => String(value).trim().toLowerCase());
+  const headerIndex = (nameList) => {
+    for (let i = 0; i < headerRow.length; i++) {
+      if (nameList.some(name => headerRow[i] === String(name).trim().toLowerCase())) return i + 1;
+    }
+    return null;
+  };
+
+  const setValue = (names, val) => {
+    const index = headerIndex(names);
+    if (index) values[index - 1] = val;
+  };
+
+  setValue(['timestamp'], new Date());
+  setValue(['source'], d.source || (isBot ? 'bot' : 'website'));
+  setValue(['name'], d.name || '');
+  setValue(['email'], d.email || '');
+  setValue(['phone'], d.phone || '');
+  setValue(['gpa'], d.gpa || '');
+  setValue(['major'], d.major || '');
+  setValue(['interest'], d.interest || '');
+  setValue(['page'], d.page || '');
+  setValue(['raw payload'], JSON.stringify(d.rawPayload || {}));
+  setValue(['حالة التواصل', 'contact status'], 'لم يتم التواصل');
+
+  sheet.getRange(row, 1, 1, totalColumns).setValues([values]);
+  formatTimestamp_(sheet, row);
+}
+
+function ensureHeaders_(sheet, requiredHeaders) {
+  const existing = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0].map(value => String(value).trim().toLowerCase());
+  requiredHeaders.forEach(header => {
+    const normalizedHeader = String(header).trim().toLowerCase();
+    if (!existing.includes(normalizedHeader)) {
+      const nextCol = sheet.getLastColumn() + 1;
+      sheet.getRange(1, nextCol).setValue(header);
+      existing.push(normalizedHeader);
+    }
+  });
 }
 
 function setContactStatus_(sheet, row) {
