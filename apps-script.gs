@@ -15,7 +15,9 @@ function doPost(e) {
     analytics.appendRow([
       new Date(), d.event || '', d.sessionId || '', d.page || '',
       Number(d.durationSeconds) || 0, d.form || '', d.device || '',
-      d.source || 'direct'
+      d.source || 'direct', d.medium || '', d.campaign || '',
+      d.content || '', d.referrer || 'direct', d.landingPage || '',
+      d.language || '', d.timezone || '', d.screen || '', d.browser || ''
     ]);
     return json_({ ok: true });
   }
@@ -37,6 +39,12 @@ function doGet(e) {
   const daily = {};
   const pages = {};
   const sources = {};
+  const mediums = {};
+  const campaigns = {};
+  const landingPages = {};
+  const devices = {};
+  const languages = {};
+  const timezones = {};
   const forms = {};
   let totalDuration = 0;
   let durationCount = 0;
@@ -47,6 +55,12 @@ function doGet(e) {
     const sessionId = String(row[2] || '');
     const page = String(row[3] || '/') || '/';
     const source = String(row[7] || 'direct');
+    const medium = String(row[8] || 'unknown');
+    const campaign = String(row[9] || 'none');
+    const landingPage = String(row[12] || page);
+    const device = String(row[6] || 'unknown');
+    const language = String(row[13] || 'unknown');
+    const timezone = String(row[14] || 'unknown');
     daily[date] = (daily[date] || 0) + 1;
     if (sessionId) sessions[sessionId] = true;
     if (event === 'page_view') pages[page] = (pages[page] || 0) + 1;
@@ -67,6 +81,12 @@ function doGet(e) {
     if (event === 'page_view') {
       const label = source === 'direct' ? 'Direct' : source;
       sources[label] = (sources[label] || 0) + 1;
+      mediums[medium] = (mediums[medium] || 0) + 1;
+      campaigns[campaign] = (campaigns[campaign] || 0) + 1;
+      landingPages[landingPage] = (landingPages[landingPage] || 0) + 1;
+      devices[device] = (devices[device] || 0) + 1;
+      languages[language] = (languages[language] || 0) + 1;
+      timezones[timezone] = (timezones[timezone] || 0) + 1;
     }
   });
 
@@ -81,6 +101,12 @@ function doGet(e) {
     daily: daily,
     pages: pages,
     sources: sources,
+    mediums: mediums,
+    campaigns: campaigns,
+    landingPages: landingPages,
+    devices: devices,
+    languages: languages,
+    timezones: timezones,
     forms: forms,
     updatedAt: new Date().toISOString()
   });
@@ -89,10 +115,13 @@ function doGet(e) {
 function getAnalyticsSheet_() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = spreadsheet.getSheetByName('Analytics');
+  const headers = ['Timestamp', 'Event', 'Session ID', 'Page', 'Duration Seconds', 'Form', 'Device', 'Source', 'Medium', 'Campaign', 'Content', 'Referrer', 'Landing Page', 'Language', 'Timezone', 'Screen', 'Browser'];
   if (!sheet) {
     sheet = spreadsheet.insertSheet('Analytics');
-    sheet.appendRow(['Timestamp', 'Event', 'Session ID', 'Page', 'Duration Seconds', 'Form', 'Device', 'Source']);
     sheet.setFrozenRows(1);
+  }
+  if (sheet.getLastColumn() < headers.length) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   }
   return sheet;
 }

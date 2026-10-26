@@ -1,6 +1,6 @@
 /* ================== CONFIG ================== */
 // Paste your Google Apps Script Web App URL here (see apps-script.gs for the setup steps)
-const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzHw3FMH1FAmEG7d5rzPnf_8u39jGUgEwDvVFXb2K-3YWYrdkb7W_LXGqKUwAhXUHv-/exec';
+const SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzLhM8epc5ehg_H3OAgdnf5xvkoOkSpr9aR5Q1egWIGIpxGLAKtj8UoFrtYcalUEjLN/exec';
 const WA_NUMBER = '201027058317';
 const ANALYTICS_SESSION_KEY = 'road_to_italy_session';
 
@@ -17,14 +17,28 @@ function getAnalyticsSessionId() {
 function trackEvent(event, details) {
   if (!SHEET_WEB_APP_URL) return;
   const query = new URLSearchParams(location.search);
-  const source = query.get('utm_source') || (document.referrer ? new URL(document.referrer).hostname : 'direct');
+  let referrer = 'direct';
+  try { referrer = document.referrer ? new URL(document.referrer).hostname : 'direct'; } catch (error) { console.warn('Invalid referrer skipped.', error); }
+  const source = query.get('utm_source') || referrer;
+  const landingKey = 'road_to_italy_landing';
+  const landingPage = sessionStorage.getItem(landingKey) || location.pathname;
+  sessionStorage.setItem(landingKey, landingPage);
   const payload = Object.assign({
     type: 'analytics',
     event: event,
     sessionId: getAnalyticsSessionId(),
     page: location.pathname,
     source: source,
+    medium: query.get('utm_medium') || '',
+    campaign: query.get('utm_campaign') || '',
+    content: query.get('utm_content') || '',
+    referrer: referrer,
+    landingPage: landingPage,
     device: window.innerWidth < 768 ? 'mobile' : 'desktop',
+    language: navigator.language || '',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+    screen: window.screen ? window.screen.width + 'x' + window.screen.height : '',
+    browser: navigator.userAgentData && navigator.userAgentData.brands ? navigator.userAgentData.brands[0].brand : 'browser',
     timestamp: new Date().toISOString()
   }, details || {});
   const body = JSON.stringify(payload);
