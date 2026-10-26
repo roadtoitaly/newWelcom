@@ -12,13 +12,15 @@ function doPost(e) {
   const d = JSON.parse(e.postData.contents);
   if (d.type === 'analytics') {
     const analytics = getAnalyticsSheet_();
-    analytics.appendRow([
+    const analyticsRow = analytics.getLastRow() + 1;
+    analytics.getRange(analyticsRow, 1, 1, 17).setValues([[
       new Date(), d.event || '', d.sessionId || '', d.page || '',
       Number(d.durationSeconds) || 0, d.form || '', d.device || '',
       d.source || 'direct', d.medium || '', d.campaign || '',
       d.content || '', d.referrer || 'direct', d.landingPage || '',
       d.language || '', d.timezone || '', d.screen || '', d.browser || ''
-    ]);
+    ]]);
+    formatTimestamp_(analytics, analyticsRow);
     return json_({ ok: true });
   }
   const isBot = String(d.type || '').toLowerCase() === 'bot'
@@ -30,6 +32,7 @@ function doPost(e) {
     new Date(), d.source || '', d.name || '', d.email || '', d.phone || '',
     d.gpa || '', d.major || '', d.interest || '', d.page || ''
   ]]);
+  formatTimestamp_(sheet, row);
   setContactStatus_(sheet, row);
   return json_({ ok: true, sheet: sheet.getName() });
 }
@@ -128,6 +131,7 @@ function getAnalyticsSheet_() {
   if (sheet.getLastColumn() < headers.length) {
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   }
+  sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   return sheet;
 }
 
@@ -137,6 +141,7 @@ function getDataSheet_(name) {
   if (!sheet) {
     sheet = spreadsheet.insertSheet(name);
   }
+  sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   return sheet;
 }
 
@@ -151,6 +156,10 @@ function setContactStatus_(sheet, row) {
   if (!sheet.getRange(row, statusColumn).getValue()) {
     sheet.getRange(row, statusColumn).setValue('لم يتم التواصل');
   }
+}
+
+function formatTimestamp_(sheet, row) {
+  sheet.getRange(row, 1).setNumberFormat('yyyy-mm-dd hh:mm:ss');
 }
 
 function json_(data) {
