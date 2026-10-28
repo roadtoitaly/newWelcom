@@ -1,55 +1,73 @@
 /**
- * Road to Italy — Google Sheet receiver
- * 1) Create a Google Sheet. Add these headers in row 1:
- *    Timestamp | Source | Name | Email | Phone | GPA | Major | Interest | Page
- *    The script creates an "Analytics" sheet automatically for tracking events.
- * 2) In the sheet: Extensions > Apps Script. Paste this file, save.
- * 3) Deploy > New deployment > type "Web app"
- *      Execute as: Me      Who has access: Anyone
- * 4) Copy the Web app URL and paste it into SHEET_WEB_APP_URL in site.js
+ * ROAD to ITALY — Google Sheets receiver
+ * Deploy as Web App: Execute as Me; Who has access: Anyone.
+ * Existing mixed/legacy lead tabs are preserved. If their headers do not
+ * match the fixed schema, new clean tabs (Bot_Data_v2 / Road_to_Italy_v2)
+ * are used automatically, so old student data is not overwritten.
  */
+
+const LEAD_HEADERS = [
+  'Timestamp', 'Source', 'Name', 'Email', 'Phone', 'GPA', 'Major',
+  'Interest', 'Page', 'Age', 'Governorate', 'Faculty', 'Language Cert',
+  'Study Language', 'Goal', 'Academic Year', 'Target Field', 'Chosen Major',
+  'Current Situation', 'Inquiries', 'Raw Payload', 'Contact Status'
+];
+
+const ANALYTICS_HEADERS = [
+  'Timestamp', 'Event', 'Session ID', 'Page', 'Duration Seconds', 'Form',
+  'Device', 'Source', 'Medium', 'Campaign', 'Content', 'Referrer',
+  'Landing Page', 'Language', 'Timezone', 'Screen', 'Browser'
+];
+
 function doPost(e) {
-  const d = JSON.parse(e.postData.contents);
-  if (d.type === 'analytics') {
-    const analytics = getAnalyticsSheet_();
-    const analyticsRow = analytics.getLastRow() + 1;
-    analytics.getRange(analyticsRow, 1, 1, 17).setValues([[
-      new Date(), d.event || '', d.sessionId || '', d.page || '',
-      Number(d.durationSeconds) || 0, d.form || '', d.device || '',
-      d.source || 'direct', d.medium || '', d.campaign || '',
-      d.content || '', d.referrer || 'direct', d.landingPage || '',
-      d.language || '', d.timezone || '', d.screen || '', d.browser || ''
-    ]]);
-    formatTimestamp_(analytics, analyticsRow);
-    return json_({ ok: true });
+  try {
+    const raw = e && e.postData && e.postData.contents ? e.postData.contents : '{}';
+    const d = JSON.parse(raw);
+
+    if (d.type === 'analytics') {
+      const sheet = getAnalyticsSheet_();
+      const row = sheet.getLastRow() + 1;
+      sheet.getRange(row, 1, 1, ANALYTICS_HEADERS.length).setValues([[
+        new Date(), d.event || '', d.sessionId || '', d.page || '/',
+        Number(d.durationSeconds) || 0, d.form || '', d.device || '',
+        d.source || 'direct', d.medium || '', d.campaign || '', d.content || '',
+        d.referrer || 'direct', d.landingPage || '', d.language || '',
+        d.timezone || '', d.screen || '', d.browser || ''
+      ]]);
+      formatTimestamp_(sheet, row);
+      return json_({ ok: true, type: 'analytics', sheet: sheet.getName(), row: row });
+    }
+
+    const isBot = String(d.type || '').toLowerCase() === 'bot' ||
+      /bot|whatsapp/i.test(String(d.source || ''));
+    const preferredName = isBot ? 'Bot_Data' : 'Road_to_Italy';
+    const sheet = getLeadSheet_(preferredName);
+    const savedRow = appendLeadRow_(sheet, d, isBot);
+
+    return json_({
+      ok: true,
+      type: isBot ? 'bot' : 'website',
+      sheet: sheet.getName(),
+      row: savedRow
+    });
+  } catch (error) {
+    console.error('doPost error:', error && error.stack ? error.stack : error);
+    return json_({ ok: false, error: String(error && error.message ? error.message : error) });
   }
-  const isBot = String(d.type || '').toLowerCase() === 'bot'
-    || /bot|whatsapp/i.test(String(d.source || ''))
-    || !d.source;
-  const sheet = getDataSheet_(isBot ? 'Bot_Data' : 'Road_to_Italy');
-  appendLeadRow_(sheet, d, isBot);
-  return json_({ ok: true, sheet: sheet.getName() });
 }
 
 function doGet(e) {
-  const days = Math.min(Math.max(Number(e.parameter.days) || 7, 1), 90);
+  const params = e && e.parameter ? e.parameter : {};
+  const days = Math.min(Math.max(Number(params.days) || 7, 1), 90);
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const sheet = getAnalyticsSheet_();
   const values = sheet.getDataRange().getValues();
   const rows = values.slice(1).filter(row => row[0] instanceof Date && row[0] >= since);
-  const sessions = {};
-  const daily = {};
-  const pages = {};
-  const sources = {};
-  const mediums = {};
-  const campaigns = {};
-  const landingPages = {};
-  const devices = {};
-  const languages = {};
-  const timezones = {};
-  const forms = {};
-  let totalDuration = 0;
-  let durationCount = 0;
+
+  const sessions = {}, daily = {}, pages = {}, sources = {}, mediums = {};
+  const campaigns = {}, landingPages = {}, devices = {}, languages = {};
+  const timezones = {}, forms = {};
+  let totalDuration = 0, durationCount = 0;
 
   rows.forEach(row => {
     const date = Utilities.formatDate(row[0], Session.getScriptTimeZone(), 'yyyy-MM-dd');
@@ -63,6 +81,7 @@ function doGet(e) {
     const device = String(row[6] || 'unknown');
     const language = String(row[13] || 'unknown');
     const timezone = String(row[14] || 'unknown');
+
     daily[date] = (daily[date] || 0) + 1;
     if (sessionId) sessions[sessionId] = true;
     if (event === 'page_view') pages[page] = (pages[page] || 0) + 1;
@@ -100,104 +119,96 @@ function doGet(e) {
     averageDurationSeconds: durationCount ? Math.round(totalDuration / durationCount) : 0,
     formOpens: rows.filter(row => row[1] === 'form_open' || row[1] === 'form_view').length,
     formSubmissions: rows.filter(row => row[1] === 'form_submit').length,
-    daily: daily,
-    pages: pages,
-    sources: sources,
-    mediums: mediums,
-    campaigns: campaigns,
-    landingPages: landingPages,
-    devices: devices,
-    languages: languages,
-    timezones: timezones,
-    forms: forms,
+    daily, pages, sources, mediums, campaigns, landingPages, devices,
+    languages, timezones, forms,
     updatedAt: new Date().toISOString()
   });
 }
 
 function getAnalyticsSheet_() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = spreadsheet.getSheetByName('Analytics');
-  const headers = ['Timestamp', 'Event', 'Session ID', 'Page', 'Duration Seconds', 'Form', 'Device', 'Source', 'Medium', 'Campaign', 'Content', 'Referrer', 'Landing Page', 'Language', 'Timezone', 'Screen', 'Browser'];
-  if (!sheet) {
-    sheet = spreadsheet.insertSheet('Analytics');
-    sheet.setFrozenRows(1);
-  }
-  if (sheet.getLastColumn() < headers.length) {
-    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  }
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName('Analytics');
+  if (!sheet) sheet = ss.insertSheet('Analytics');
+  ensureExactHeaders_(sheet, ANALYTICS_HEADERS);
   sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   return sheet;
 }
 
-function getDataSheet_(name) {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = spreadsheet.getSheetByName(name);
+function getLeadSheet_(preferredName) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(preferredName);
   if (!sheet) {
-    sheet = spreadsheet.insertSheet(name);
+    sheet = ss.insertSheet(preferredName);
+    ensureExactHeaders_(sheet, LEAD_HEADERS);
+    return sheet;
   }
-  sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
-  return sheet;
+
+  if (hasExactHeaders_(sheet, LEAD_HEADERS)) return sheet;
+
+  // Preserve the old mixed-schema sheet. Write new leads to a clean v2 tab.
+  const cleanName = preferredName + '_v2';
+  let clean = ss.getSheetByName(cleanName);
+  if (!clean) clean = ss.insertSheet(cleanName);
+  ensureExactHeaders_(clean, LEAD_HEADERS);
+  return clean;
 }
 
 function appendLeadRow_(sheet, d, isBot) {
-  const baseHeaders = ['Timestamp', 'Source', 'Name', 'Email', 'Phone', 'GPA', 'Major', 'Interest', 'Page'];
-  const extraHeaders = ['Raw Payload', 'حالة التواصل'];
-  ensureHeaders_(sheet, baseHeaders.concat(extraHeaders));
-
-  const totalColumns = sheet.getLastColumn();
-  const row = sheet.getLastRow() + 1;
-  const values = Array(totalColumns).fill('');
-  const headerRow = sheet.getRange(1, 1, 1, totalColumns).getValues()[0].map(value => String(value).trim().toLowerCase());
-  const headerIndex = (nameList) => {
-    for (let i = 0; i < headerRow.length; i++) {
-      if (nameList.some(name => headerRow[i] === String(name).trim().toLowerCase())) return i + 1;
+  const pick = (...keys) => {
+    for (const key of keys) {
+      const value = d[key];
+      if (value !== undefined && value !== null && String(value).trim() !== '') return value;
     }
-    return null;
+    return '';
   };
 
-  const setValue = (names, val) => {
-    const index = headerIndex(names);
-    if (index) values[index - 1] = val;
-  };
+  const rowValues = [
+    new Date(),
+    pick('source') || (isBot ? 'WhatsApp Bot' : 'website'),
+    pick('name'), pick('email'), pick('phone'), pick('gpa'),
+    pick('major', 'chosen_major', 'target_field'),
+    pick('interest', 'goal'),
+    pick('page') || (isBot ? 'whatsapp-bot' : 'website'),
+    pick('age'), pick('governorate'), pick('faculty'), pick('language_cert'),
+    pick('study_language'), pick('goal'), pick('academic_year'),
+    pick('target_field'), pick('chosen_major'), pick('current_situation'),
+    pick('inquiries'), JSON.stringify(d.rawPayload || d), 'لم يتم التواصل'
+  ];
 
-  setValue(['timestamp'], new Date());
-  setValue(['source'], d.source || (isBot ? 'bot' : 'website'));
-  setValue(['name'], d.name || '');
-  setValue(['email'], d.email || '');
-  setValue(['phone'], d.phone || '');
-  setValue(['gpa'], d.gpa || '');
-  setValue(['major'], d.major || '');
-  setValue(['interest'], d.interest || '');
-  setValue(['page'], d.page || '');
-  setValue(['raw payload'], JSON.stringify(d.rawPayload || {}));
-  setValue(['حالة التواصل', 'contact status'], 'لم يتم التواصل');
-
-  sheet.getRange(row, 1, 1, totalColumns).setValues([values]);
-  formatTimestamp_(sheet, row);
-}
-
-function ensureHeaders_(sheet, requiredHeaders) {
-  const existing = sheet.getRange(1, 1, 1, Math.max(sheet.getLastColumn(), 1)).getValues()[0].map(value => String(value).trim().toLowerCase());
-  requiredHeaders.forEach(header => {
-    const normalizedHeader = String(header).trim().toLowerCase();
-    if (!existing.includes(normalizedHeader)) {
-      const nextCol = sheet.getLastColumn() + 1;
-      sheet.getRange(1, nextCol).setValue(header);
-      existing.push(normalizedHeader);
-    }
-  });
-}
-
-function setContactStatus_(sheet, row) {
-  const lastColumn = Math.max(sheet.getLastColumn(), 9);
-  const headers = sheet.getRange(1, 1, 1, lastColumn).getValues()[0].map(value => String(value).trim().toLowerCase());
-  let statusColumn = headers.findIndex(header => header === 'حالة التواصل' || header === 'contact status') + 1;
-  if (!statusColumn) {
-    statusColumn = lastColumn + 1;
-    sheet.getRange(1, statusColumn).setValue('حالة التواصل');
+  if (rowValues.length !== LEAD_HEADERS.length) {
+    throw new Error('Lead data does not match the expected ' + LEAD_HEADERS.length + '-column schema.');
   }
-  if (!sheet.getRange(row, statusColumn).getValue()) {
-    sheet.getRange(row, statusColumn).setValue('لم يتم التواصل');
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    // Recheck after acquiring lock in case another request initialized the tab.
+    ensureExactHeaders_(sheet, LEAD_HEADERS);
+    const row = sheet.getLastRow() + 1;
+    sheet.getRange(row, 1, 1, LEAD_HEADERS.length).setValues([rowValues]);
+    formatTimestamp_(sheet, row);
+    SpreadsheetApp.flush();
+    return row;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function hasExactHeaders_(sheet, expected) {
+  if (sheet.getLastRow() < 1 || sheet.getLastColumn() < expected.length) return false;
+  const actual = sheet.getRange(1, 1, 1, expected.length).getDisplayValues()[0]
+    .map(value => String(value).trim());
+  return expected.every((header, i) => actual[i] === header);
+}
+
+function ensureExactHeaders_(sheet, expected) {
+  if (sheet.getLastRow() === 0) {
+    sheet.getRange(1, 1, 1, expected.length).setValues([expected]);
+    sheet.setFrozenRows(1);
+    return;
+  }
+  if (!hasExactHeaders_(sheet, expected)) {
+    throw new Error('Header mismatch in sheet "' + sheet.getName() + '". Existing data was preserved.');
   }
 }
 
@@ -206,5 +217,6 @@ function formatTimestamp_(sheet, row) {
 }
 
 function json_(data) {
-  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
 }
