@@ -422,5 +422,53 @@
             observeNewReveals(grid);
         })();
     </script>
+    <!-- Floating Guide Notification (Toast) -->
+<div id="guide-toast" class="fixed bottom-6 left-6 z-40 transform translate-y-24 opacity-0 transition-all duration-700 ease-out pointer-events-none">
+    <div class="glass border border-gold/30 bg-forest/95 backdrop-blur-md p-4 rounded-2xl shadow-[0_8px_30px_rgba(212,175,55,0.15)] flex items-start gap-4 max-w-sm relative pointer-events-auto group">
+        <!-- زر الإغلاق -->
+        <button onclick="closeGuideToast()" class="absolute -top-2 -right-2 w-6 h-6 bg-forest border border-cream/20 rounded-full text-cream/70 flex items-center justify-center text-xs hover:text-white hover:border-gold hover:bg-gold transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        
+        <!-- أيقونة الدليل -->
+        <div class="w-12 h-12 rounded-xl bg-gold/10 flex-shrink-0 flex items-center justify-center text-gold text-xl border border-gold/20 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-book-open-reader"></i>
+        </div>
+        
+        <!-- المحتوى -->
+        <div class="flex flex-col">
+            <h4 class="font-playfair font-bold text-cream text-lg leading-tight mb-1">Free Study Guide</h4>
+            <p class="text-xs text-cream/70 font-montserrat mb-3">Everything you need to know about studying in Italy in one interactive guide.</p>
+            
+            <a href="guide.html" target="_blank" onclick="closeGuideToast()" class="text-xs font-bold text-forest bg-gold hover:bg-cream py-2 px-4 rounded-lg text-center transition-colors inline-flex items-center justify-center gap-2">
+                Open Guide Now <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // التحكم في ظهور نافذة الدليل
+    function showGuideToast() {
+        const toast = document.getElementById('guide-toast');
+        if (toast && !sessionStorage.getItem('guideToastDismissed')) {
+            toast.classList.remove('translate-y-24', 'opacity-0');
+        }
+    }
+
+    function closeGuideToast() {
+        const toast = document.getElementById('guide-toast');
+        if (toast) {
+            toast.classList.add('translate-y-24', 'opacity-0');
+            // حفظ الإغلاق في الجلسة الحالية حتى لا يزعج الزائر مرة أخرى
+            sessionStorage.setItem('guideToastDismissed', 'true');
+        }
+    }
+
+    // إظهار النافذة بعد 3.5 ثوانٍ من تحميل الصفحة
+    window.addEventListener('load', () => {
+        setTimeout(showGuideToast, 3500);
+    });
+</script>
 </body>
 </html>
